@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<select selectize="item for item in ['yes','no']" ng-model="foo"></select>
+<select selectize="item.key as item.value for item in [{'key':'yes','value':'YAS'},{'key':'no','value':'NO'}]" ng-model="foo"></select>
 {{foo}}
 </body>
 </html>
