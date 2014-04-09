@@ -8,14 +8,14 @@ app.directive 'selectize', ($parse) ->
 		optionsExp = attributes.selectize
 		match = optionsExp.match(NG_OPTIONS_REGEXP)
 
-		# displayFn = $parse(match[2] or match[1])
-		# valueName = match[4] or match[6]
-		# keyName = match[5]
-		# groupByFn = $parse(match[3] or "")
-		# valueFn = $parse((if match[2] then match[1] else valueName))
-		# valuesFn = $parse(match[7])
-		# track = match[8]
-		# trackFn = (if track then $parse(match[8]) else null)
+		displayFn = $parse(match[2] or match[1])
+		valueName = match[4] or match[6]
+		keyName = match[5]
+		groupByFn = $parse(match[3] or "")
+		valueFn = $parse((if match[2] then match[1] else valueName))
+		valuesFn = $parse(match[7])
+		track = match[8]
+		trackFn = (if track then $parse(match[8]) else null)
 
 		element.selectize
 			valueField: 'id'
@@ -27,6 +27,14 @@ app.directive 'selectize', ($parse) ->
 				{'id':'maybe', 'title':'maybe'}
 			]
 			create: false
+
+		element.on 'change', ->
+			scope.$apply ->
+				ngModel.$setViewValue element.val()
+
+		ngModel.$render = ->
+			element.setValue ngModel.$viewValue
+
 
 		# editor = ace.edit element[0]
 		# editor.focus() # greedy focus

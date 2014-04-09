@@ -10,10 +10,18 @@
     return {
       require: '?ngModel',
       link: function(scope, element, attributes, ngModel) {
-        var match, optionsExp;
+        var displayFn, groupByFn, keyName, match, optionsExp, track, trackFn, valueFn, valueName, valuesFn;
         optionsExp = attributes.selectize;
         match = optionsExp.match(NG_OPTIONS_REGEXP);
-        return element.selectize({
+        displayFn = $parse(match[2] || match[1]);
+        valueName = match[4] || match[6];
+        keyName = match[5];
+        groupByFn = $parse(match[3] || "");
+        valueFn = $parse((match[2] ? match[1] : valueName));
+        valuesFn = $parse(match[7]);
+        track = match[8];
+        trackFn = (track ? $parse(match[8]) : null);
+        element.selectize({
           valueField: 'id',
           labelField: 'title',
           searchField: ['title'],
@@ -31,6 +39,14 @@
           ],
           create: false
         });
+        element.on('change', function() {
+          return scope.$apply(function() {
+            return ngModel.$setViewValue(element.val());
+          });
+        });
+        return ngModel.$render = function() {
+          return element.setValue(ngModel.$viewValue);
+        };
       }
     };
   });
